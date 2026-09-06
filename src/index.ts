@@ -13,6 +13,7 @@ import {
   idTokenEmail,
   parseHeaders,
   resolveLogsEndpoint,
+  telemetryEmail,
 } from "./core.js";
 
 const EXTENSION_VERSION = "0.0.6";
@@ -197,7 +198,7 @@ export default function codexOpenTelemetry(pi: ExtensionAPI): void {
       id: ctx.sessionManager.getSessionId(),
       model: model?.id ?? "unknown",
       provider,
-      email: (await agentAccountEmail(provider)) ?? codexAccountEmail() ?? gitEmail(),
+      email: telemetryEmail(codexAccountEmail(), await agentAccountEmail(provider), gitEmail()),
       terminalType: process.env.TERM_PROGRAM ?? process.env.TERM ?? "unknown",
     };
     emit("codex.conversation_starts", {

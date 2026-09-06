@@ -5,6 +5,7 @@ import {
   idTokenEmail,
   parseHeaders,
   resolveLogsEndpoint,
+  telemetryEmail,
 } from "../src/core.ts";
 
 test("resolves standard OTLP log endpoints without duplication", () => {
@@ -60,4 +61,15 @@ test("reads the email claim from a Codex id_token", () => {
   assert.equal(idTokenEmail(undefined), undefined);
   assert.equal(idTokenEmail("not-a-jwt"), undefined);
   assert.equal(idTokenEmail("header.bm90LWpzb24.signature"), undefined);
+});
+
+test("prefers the native Codex identity over the model provider account", () => {
+  assert.equal(
+    telemetryEmail("codex@example.com", "provider@example.com", "git@example.com"),
+    "codex@example.com",
+  );
+  assert.equal(
+    telemetryEmail(undefined, "provider@example.com", "git@example.com"),
+    "provider@example.com",
+  );
 });

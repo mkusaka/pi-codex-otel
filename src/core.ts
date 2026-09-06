@@ -63,3 +63,11 @@ export function idTokenEmail(idToken: string | undefined): string | undefined {
     return undefined;
   }
 }
+
+export function telemetryEmail(
+  codexEmail: string | undefined,
+  agentEmail: string | undefined,
+  gitEmail: string | undefined,
+): string | undefined {
+  return codexEmail ?? agentEmail ?? gitEmail;
+}
