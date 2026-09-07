@@ -12,6 +12,7 @@ import {
   completionAttributes,
   idTokenEmail,
   parseHeaders,
+  parseLogAttributeOverrides,
   resolveLogsEndpoint,
   telemetryEmail,
 } from "./core.js";
@@ -144,6 +145,7 @@ export default function codexOpenTelemetry(pi: ExtensionAPI): void {
   let session: Session | undefined;
   let agentStartedAt: number | undefined;
   const toolStartedAt = new Map<string, number>();
+  const attributeOverrides = parseLogAttributeOverrides(process.env.PI_CODEX_OTEL_ATTRIBUTES);
 
   const emit = (eventName: string, attributes: LogAttributes): void => {
     if (!runtime || !session) return;
@@ -164,6 +166,7 @@ export default function codexOpenTelemetry(pi: ExtensionAPI): void {
         model: session.model,
         ...(session.email ? { "user.email": session.email } : {}),
         ...attributes,
+        ...attributeOverrides,
       },
     });
   };

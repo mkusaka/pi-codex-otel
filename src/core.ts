@@ -71,3 +71,32 @@ export function telemetryEmail(
 ): string | undefined {
   return codexEmail ?? agentEmail ?? gitEmail;
 }
+
+type LogAttributeOverride = string | number | boolean | readonly (string | number | boolean)[];
+
+function isLogAttributeOverride(value: unknown): value is LogAttributeOverride {
+  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+    return true;
+  }
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (item) => typeof item === "string" || typeof item === "number" || typeof item === "boolean",
+    )
+  );
+}
+
+export function parseLogAttributeOverrides(
+  raw: string | undefined,
+): Record<string, LogAttributeOverride> {
+  if (!raw) return {};
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!parsed || Array.isArray(parsed) || typeof parsed !== "object") return {};
+    return Object.fromEntries(
+      Object.entries(parsed).filter(([, value]) => isLogAttributeOverride(value)),
+    );
+  } catch {
+    return {};
+  }
+}

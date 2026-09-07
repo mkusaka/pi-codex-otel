@@ -4,6 +4,7 @@ import {
   completionAttributes,
   idTokenEmail,
   parseHeaders,
+  parseLogAttributeOverrides,
   resolveLogsEndpoint,
   telemetryEmail,
 } from "../src/core.ts";
@@ -72,4 +73,29 @@ test("prefers the native Codex identity over the model provider account", () => 
     telemetryEmail(undefined, "provider@example.com", "git@example.com"),
     "provider@example.com",
   );
+});
+
+test("parses scalar and array log attribute overrides from a JSON object", () => {
+  assert.deepEqual(
+    parseLogAttributeOverrides(
+      '{"user.email":"masatomo.kusaka+oai1@medley.jp","sampled":true,"retries":2,"roles":["admin","developer"]}',
+    ),
+    {
+      "user.email": "masatomo.kusaka+oai1@medley.jp",
+      sampled: true,
+      retries: 2,
+      roles: ["admin", "developer"],
+    },
+  );
+});
+
+test("ignores malformed or non-attribute log override values", () => {
+  assert.deepEqual(
+    parseLogAttributeOverrides('{"user.email":{"nested":"value"},"valid":"value"}'),
+    {
+      valid: "value",
+    },
+  );
+  assert.deepEqual(parseLogAttributeOverrides("not-json"), {});
+  assert.deepEqual(parseLogAttributeOverrides('["user.email"]'), {});
 });

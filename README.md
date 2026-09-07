@@ -31,6 +31,16 @@ export OTEL_EXPORTER_OTLP_ENDPOINT=https://otel.example.com
 
 Run `/codex-otel-status` in Pi or Oh My Pi to see whether the extension has an active endpoint.
 
+### Overriding log attributes
+
+`PI_CODEX_OTEL_ATTRIBUTES` accepts a JSON object that is merged into every emitted log record after the extension's own attributes. Its values override the matching generated attributes. Use it when the collector needs an explicit identity:
+
+```sh
+export PI_CODEX_OTEL_ATTRIBUTES='{"user.email":"masatomo.kusaka+oai1@medley.jp"}'
+```
+
+Values may be strings, numbers, booleans, or arrays of those primitive values. Invalid JSON, non-object JSON, nested objects, and `null` are ignored. This overrides **log** attributes only; continue using `OTEL_RESOURCE_ATTRIBUTES` for resource attributes.
+
 ### Reusing an existing Codex config
 
 The extension reads environment variables only; it never parses `~/.codex/config.toml`. To send to the same endpoint Codex already uses, translate the `[otel]` section once in your shell profile and wrap the agent:
@@ -79,7 +89,7 @@ The extension uses the closest Pi lifecycle event where Codex has no equivalent 
 
 Prompts are always sent as `[REDACTED]`; only their character length and image count are exported. Source code, file paths, tool arguments, and tool results are never exported.
 
-`user.email` identifies the signed-in account, resolved in order: the agent's own OAuth credential in `<agentDir>/agent.db`, then the `email` claim of the id token in `$CODEX_HOME/auth.json` (the source Codex itself reads), then `git config --global user.email`. Only the address is exported; tokens are never read into a record, verified, or sent. Review collector retention and access policies before enabling team-wide export.
+`user.email` defaults to the `email` claim of the id token in `$CODEX_HOME/auth.json` (the source Codex itself reads), then the agent's own OAuth credential in `<agentDir>/agent.db`, then `git config --global user.email`. Set `PI_CODEX_OTEL_ATTRIBUTES` to explicitly override it. Only the address is exported; tokens are never read into a record, verified, or sent. Review collector retention and access policies before enabling team-wide export.
 
 ## Development
 
