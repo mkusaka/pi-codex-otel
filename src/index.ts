@@ -17,7 +17,7 @@ import {
   telemetryEmail,
 } from "./core.js";
 
-const EXTENSION_VERSION = "0.0.8";
+const EXTENSION_VERSION = "0.0.9";
 // Codex's own originator/service name, so collectors treat these logs like Codex's own.
 const CODEX_ORIGINATOR = "codex_cli_rs";
 const CODEX_LOGGER_SCOPE = "codex_otel.log_only";
