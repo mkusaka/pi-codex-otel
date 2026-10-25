@@ -36,7 +36,7 @@ Run `/codex-otel-status` in Pi or Oh My Pi to see whether the extension has an a
 `PI_CODEX_OTEL_ATTRIBUTES` accepts a JSON object that is merged into every emitted log record after the extension's own attributes. Its values override the matching generated attributes. Use it when the collector needs an explicit identity:
 
 ```sh
-export PI_CODEX_OTEL_ATTRIBUTES='{"user.email":"masatomo.kusaka+oai1@medley.jp"}'
+export PI_CODEX_OTEL_ATTRIBUTES='{"user.email":"you@example.com"}'
 ```
 
 Values may be strings, numbers, booleans, or arrays of those primitive values. Invalid JSON, non-object JSON, nested objects, and `null` are ignored. This overrides **log** attributes only; continue using `OTEL_RESOURCE_ATTRIBUTES` for resource attributes.

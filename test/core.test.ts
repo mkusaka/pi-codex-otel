@@ -78,10 +78,10 @@ test("prefers the native Codex identity over the model provider account", () => 
 test("parses scalar and array log attribute overrides from a JSON object", () => {
   assert.deepEqual(
     parseLogAttributeOverrides(
-      '{"user.email":"masatomo.kusaka+oai1@medley.jp","sampled":true,"retries":2,"roles":["admin","developer"]}',
+      '{"user.email":"you@example.com","sampled":true,"retries":2,"roles":["admin","developer"]}',
     ),
     {
-      "user.email": "masatomo.kusaka+oai1@medley.jp",
+      "user.email": "you@example.com",
       sampled: true,
       retries: 2,
       roles: ["admin", "developer"],
